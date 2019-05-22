@@ -3,6 +3,8 @@ from selenium import webdriver
 import time
 import urllib.request
 from lxml import html
+import product
+import dbInterface
 
 urls = ["https://www.pingodoce.pt/produtos/categoria/alimentacao-especial/"
        ,"https://www.pingodoce.pt/produtos/categoria/animais/"
@@ -42,26 +44,16 @@ for url in urls:
     i = 0
     articles = len(browser.find_elements_by_xpath("//article[contains(@class,'cf')]"))
     for x in range(articles):
-        product = browser.find_elements_by_xpath("//div[@class='product-box-title']")[i]
-        price = browser.find_elements_by_xpath("//span[@class='price']")[i]
-        units = browser.find_elements_by_xpath("//span[@class='units']")[i]
-        category = browser.find_elements_by_xpath("//div[@class='categoria-produto']")[i]
-        print("Product", products + 1, category.text.strip(), price.text.strip(), units.text.strip(), product.text.strip())
+        product.Product.category = browser.find_elements_by_xpath("//div[@class='categoria-produto']")[i].text
+        product.Product.origin = "Pingo Doce"
+        product.Product.price = browser.find_elements_by_xpath("//span[@class='price']")[i].text
+        product.Product.productName = browser.find_elements_by_xpath("//div[@class='product-box-title']")[i].text
+        product.Product.price = browser.find_elements_by_xpath("//span[@class='price']")[i].text
+        product.Product.unit = browser.find_elements_by_xpath("//span[@class='units']")[i].text
+        product.Product.url = url 
+        print("Product", products + 1)
         i = i + 1
         products = products + 1
+        o = dbInterface.insertProduct(product.Product)
     browser.quit()
     display.stop()
-
-    # request = urllib.request.Request(url)
-    # result = urllib.request.urlopen(request)
-    # resulttext = result.read()
-    # htmlForm = html.fromstring(resulttext)
-    # i = 0
-    # for article in htmlForm.xpath("//article[contains(@class,'cf')]"): #("//div[@class='product-box-title']"):
-    #     product = article.xpath("//div[@class='product-box-title']")[i]
-    #     price = article.xpath("//span[@class='price']")[i]
-    #     units = article.xpath("//span[@class='units']")[i]
-    #     category = article.xpath("//div[@class='categoria-produto']")[i]
-    #     print("Product", total + 1, category.text.strip(), price.text.strip(), units.text.strip(), product.text.strip())
-    #     i = i + 1
-    #     total = total + 1
