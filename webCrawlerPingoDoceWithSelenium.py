@@ -6,6 +6,8 @@ from lxml import html
 import product
 import dbInterface
 
+
+originName = "Pingo Doce"
 urls = ["https://www.pingodoce.pt/produtos/categoria/alimentacao-especial/"
        ,"https://www.pingodoce.pt/produtos/categoria/animais/"
        ,"https://www.pingodoce.pt/produtos/categoria/bebe/"
@@ -26,6 +28,8 @@ urls = ["https://www.pingodoce.pt/produtos/categoria/alimentacao-especial/"
 
 total = 0
 products = 0
+dbInterface.deleteAllByOrigin(originName)
+print("Todas as informaçõs de {} foram excluídas.".format(originName))
 for url in urls:
     display = Display(visible=0, size=(800, 600))
     display.start()
@@ -45,7 +49,7 @@ for url in urls:
     articles = len(browser.find_elements_by_xpath("//article[contains(@class,'cf')]"))
     for x in range(articles):
         product.Product.category = browser.find_elements_by_xpath("//div[@class='categoria-produto']")[i].text
-        product.Product.origin = "Pingo Doce"
+        product.Product.origin = originName
         product.Product.price = browser.find_elements_by_xpath("//span[@class='price']")[i].text
         product.Product.productName = browser.find_elements_by_xpath("//div[@class='product-box-title']")[i].text
         product.Product.price = browser.find_elements_by_xpath("//span[@class='price']")[i].text
