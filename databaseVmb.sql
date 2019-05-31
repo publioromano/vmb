@@ -59,22 +59,6 @@ WITH (
 ALTER TABLE "vmbSchema"."Origin"
   OWNER TO "vmbUser";
 
--- DROP TABLE "vmbSchema"."Category";
-
-CREATE TABLE "vmbSchema"."Category"
-(
-  id integer generated always as identity,
-  name text,
-  idOrigin integer,
-  CONSTRAINT pk_category PRIMARY KEY (id),
-  CONSTRAINT fk_category_origin FOREIGN KEY (idOrigin) REFERENCES "vmbSchema"."Origin" (id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE "vmbSchema"."Category"
-  OWNER TO "vmbUser";
-
 -- DROP TABLE "vmbSchema"."Unity";
 
 CREATE TABLE "vmbSchema"."Unity"
@@ -99,11 +83,10 @@ CREATE TABLE "vmbSchema"."Product"
   price money,
   date date DEFAULT now(),
   imageName text,
-  idCategory integer,
+  category text,
   idUnity integer,
   idOrigin integer,
   CONSTRAINT pk_product PRIMARY KEY (id),
-  CONSTRAINT fk_product_category FOREIGN KEY (idCategory) REFERENCES "vmbSchema"."Category"(id),
   CONSTRAINT fk_product_unity FOREIGN KEY (idUnity) REFERENCES "vmbSchema"."Unity"(id),  
   CONSTRAINT fk_product_origin FOREIGN KEY (idOrigin) REFERENCES "vmbSchema"."Origin"(id)
 )
@@ -112,3 +95,9 @@ WITH (
 );
 ALTER TABLE "vmbSchema"."Product"
   OWNER TO "vmbUser";
+
+insert into "vmbSchema"."Origin" (name) values ('Pingo Doce');
+insert into "vmbSchema"."Origin" (name) values ('Continente');
+insert into "vmbSchema"."Origin" (name) values ('Mini Preço');
+insert into "vmbSchema"."Origin" (name) values ('Lidl');
+insert into "vmbSchema"."Origin" (name) values ('Audi');
